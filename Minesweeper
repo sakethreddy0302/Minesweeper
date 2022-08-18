@@ -192,7 +192,7 @@ def play(dim_size=10, num_bombs=10):
         # if it's valid, we dig
         safe = board.dig(row, col)
         if not safe:
-            # dug a bomb ahhhhhhh
+            # dug a bomb 
             break  # (game over rip)
 
     # 2 ways to end loop, lets check which one
