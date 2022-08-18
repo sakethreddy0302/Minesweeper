@@ -26,18 +26,10 @@ class Board:
         self.dug = set()  # if we dig at 0, 0, then self.dug = {(0,0)}
 
     def make_new_board(self):
-        # construct a new board based on the dim size and num bombs
-        # we should construct the list of lists here (or whatever representation you prefer,
-        # but since we have a 2-D board, list of lists is most natural)
+
 
         # generate a new board
         board = [[None for _ in range(self.dim_size)] for _ in range(self.dim_size)]
-        # this creates an array like this:
-        # [[None, None, ..., None],
-        #  [None, None, ..., None],
-        #  [...                  ],
-        #  [None, None, ..., None]]
-        # we can see how this represents a board!
 
         # plant the bombs
         bombs_planted = 0
@@ -116,12 +108,8 @@ class Board:
         # if our initial dig didn't hit a bomb, we *shouldn't* hit a bomb here
         return True
 
-    def __str__(self):
-        # this is a magic function where if you call print on this object,
-        # it'll print out what this function returns!
-        # return a string that shows the board to the player
+    def _str_(self):
 
-        # first let's create a new array that represents what the user would see
         visible_board = [[None for _ in range(self.dim_size)] for _ in range(self.dim_size)]
         for row in range(self.dim_size):
             for col in range(self.dim_size):
@@ -130,9 +118,9 @@ class Board:
                 else:
                     visible_board[row][col] = ' '
 
-        # put this together in a string
+
         string_rep = ''
-        # get max column widths for printing
+
         widths = []
         for idx in range(self.dim_size):
             columns = map(lambda x: x[idx], visible_board)
@@ -175,35 +163,29 @@ def play(dim_size=10, num_bombs=10):
 
     # Step 2: show the user the board and ask for where they want to dig
     # Step 3a: if location is a bomb, show game over message
-    # Step 3b: if location is not a bomb, dig recursively until each square is at least
-    #          next to a bomb
+    # Step 3b: if location is not a bomb, dig recursively until each square is at least next to a bomb
     # Step 4: repeat steps 2 and 3a/b until there are no more places to dig -> VICTORY!
     safe = True
 
     while len(board.dug) < board.dim_size ** 2 - num_bombs:
         print(board)
-        # 0,0 or 0, 0 or 0,    0
         user_input = re.split(',(\\s)*', input("Where would you like to dig? Input as row,col: "))  # '0, 3'
         row, col = int(user_input[0]), int(user_input[-1])
         if row < 0 or row >= board.dim_size or col < 0 or col >= dim_size:
             print("Invalid location. Try again.")
             continue
 
-        # if it's valid, we dig
         safe = board.dig(row, col)
         if not safe:
-            # dug a bomb 
-            break  # (game over rip)
+            break
 
-    # 2 ways to end loop, lets check which one
     if safe:
         print("CONGRATULATIONS!!!! YOU ARE VICTORIOUS!")
     else:
         print("SORRY GAME OVER :(")
-        # let's reveal the whole board!
         board.dug = [(r, c) for r in range(board.dim_size) for c in range(board.dim_size)]
         print(board)
 
 
-if _name_ == '_main_':  # good practice :)
+if _name_ == '_main_':
     play()
